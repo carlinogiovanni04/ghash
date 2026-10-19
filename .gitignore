@@ -4,3 +4,4 @@ bin/
 *.obj
 
 .clangd
+hash_trace.json
