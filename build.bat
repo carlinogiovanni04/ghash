@@ -6,7 +6,9 @@ if not defined CC set CC=clang-cl
 
 set OUT=bin\ghash_test.exe
 set EXAMPLE_OUT=bin\ghash_example.exe
+set PROFILE_OUT=bin\profile_ghash.exe
 set FLAGS=/nologo /std:c11 /W4 /Zi /Od /I "include"
+set PROFILE_FLAGS=/nologo /std:c11 /W4 /Zi /Od /I "include" /I "..\microprof\include"
 
 if not exist bin mkdir bin
 
@@ -24,7 +26,15 @@ if errorlevel 1 (
     exit /b 1
 )
 
+%CC% %PROFILE_FLAGS% "examples\profile_ghash.c" /Fe:"%PROFILE_OUT%" /Fo:"bin\\"
+if errorlevel 1 (
+    echo Build failed: profile_ghash.
+    popd
+    exit /b 1
+)
+
 echo Built %OUT%
 echo Built %EXAMPLE_OUT%
+echo Built %PROFILE_OUT%
 popd
 endlocal
