@@ -33,7 +33,7 @@ static void build_keys(void)
 
 int main(int argc, char **argv)
 {
-    const char *out = argc > 1 ? argv[1] : "tests/fixtures/ghash_trace.json";
+    const char *out = argc > 1 ? argv[1] : "hash_trace.json";
     GHArena     arena;
     GHMap       map;
     int         round;
