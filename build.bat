@@ -7,8 +7,8 @@ if not defined CC set CC=clang-cl
 set OUT=bin\ghash_test.exe
 set EXAMPLE_OUT=bin\ghash_example.exe
 set PROFILE_OUT=bin\profile_ghash.exe
-set FLAGS=/nologo /std:c11 /W4 /Zi /Od /I "include"
-set PROFILE_FLAGS=/nologo /std:c11 /W4 /Zi /Od /I "include" /I "..\microprof\include"
+set FLAGS=/nologo /std:c11 /W4 /Zi /O2 /I "include"
+set PROFILE_FLAGS=/nologo /std:c11 /W4 /Zi /O2 /I "include" /I "..\microprof\include"
 
 if not exist bin mkdir bin
 

@@ -1,5 +1,5 @@
 CC ?= clang
-CFLAGS = -std=c11 -g -Wall -Wextra -Werror
+CFLAGS = -std=c11 -g -O2 -Wall -Wextra -Werror
 INCLUDE = include/
 OUT = bin/ghash_test
 EXAMPLE_OUT = bin/ghash_example

@@ -107,12 +107,14 @@ typedef struct GHArena {
     usize used;
 } GHArena;
 
-// NOTE(Giovanni): One key/value pair plus its chain link.
+// NOTE(Giovanni): One key/value pair plus its chain link. The key bytes live
+// inline right after the header (flexible array member), so a node and its key
+// are a single arena allocation and share a cache line.
 typedef struct GHNode {
     struct GHNode *next;
     u64            hash;
     void          *value;
-    char          *key;
+    char           key[];
 } GHNode;
 
 typedef struct GHMap {
@@ -294,7 +296,6 @@ b32 gh_put(GHMap *map, const char *key, void *value)
 {
     u64     hash;
     GHNode *node;
-    char   *key_copy;
     usize   len;
     usize   idx;
 
@@ -311,17 +312,13 @@ b32 gh_put(GHMap *map, const char *key, void *value)
         if (!gh__grow(map)) return false;
     }
 
-    node = (GHNode *)gh__arena_alloc(map->arena, sizeof(GHNode));
+    len  = gh__str_len(key);
+    node = (GHNode *)gh__arena_alloc(map->arena, sizeof(GHNode) + len + 1);
     if (!node) return false;
 
-    len      = gh__str_len(key);
-    key_copy = (char *)gh__arena_alloc(map->arena, len + 1);
-    if (!key_copy) return false;
-    gh__mem_copy(key_copy, key, len + 1);
-
-    node->key   = key_copy;
     node->value = value;
     node->hash  = hash;
+    gh__mem_copy(node->key, key, len + 1);
 
     idx        = (usize)hash & (map->bucket_count - 1);
     node->next = map->buckets[idx];
